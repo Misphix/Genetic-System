@@ -10,42 +10,40 @@ public class RBF {
     private double distance[]; // m
     private double sigma[];
     private double theta;
-    Neuron neuron;
+    private Neuron neuron;
 
 
-    public RBF(int _neuronNumber) {
-        assert _neuronNumber > 0;
-        this.neuronCount = _neuronNumber;
+    public RBF(int neuronNumber) {
+        assert neuronNumber > 0;
 
+        neuronCount = neuronNumber;
         neuron = new Neuron();
-
     }
 
-    public void setParameter(double _theta,double _weights[],double _distance[],double _sigma[]) {
+    public void setParameter(double theta, double weights[], double distance[], double sigma[]) {
 
-        assert this.neuronCount == _weights.length;
+        assert this.neuronCount == weights.length;
 
-        this.weights = _weights;
-        this.theta = _theta;
-        this.sigma = _sigma;
-        this.distance = _distance;
-
-        //printer.print("RBF","weight",this.weights);
-
+        this.weights = weights;
+        this.theta = theta;
+        this.sigma = sigma;
+        this.distance = distance;
     }
 
     public int getNeuronCount() {
-        return this.neuronCount;
+        return neuronCount;
     }
 
-    public double getOutput(double _inputDistance[]) {
-        assert _inputDistance.length == this.distance.length / this.neuronCount;
-        assert this.neuronCount == sigma.length;
-        int dimensions = this.distance.length / this.neuronCount;
-        double value = this.theta;
-        for (int i = 0;i < this.neuronCount; i++) {
-            double result = neuron.getAngle(_inputDistance,Arrays.copyOfRange(this.distance,i*dimensions,i*dimensions+dimensions),this.sigma[i]);
-            value += this.weights[i] * result;
+    public double getOutput(double inputDistance[]) {
+        assert inputDistance.length == distance.length / neuronCount;
+        assert neuronCount == sigma.length;
+
+        int dimensions = distance.length / neuronCount;
+        double value = theta;
+
+        for (int i = 0; i < neuronCount; i++) {
+            double result = neuron.getAngle(inputDistance, Arrays.copyOfRange(distance, i * dimensions, i * dimensions + dimensions), sigma[i]);
+            value += weights[i] * result;
         }
         return value;
     }

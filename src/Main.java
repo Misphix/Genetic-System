@@ -1,7 +1,7 @@
 import GeneticSystem.GeneticParameter;
 import RBF.RBF;
 import GeneticSystem.GeneticSystem;
-import GeneticSystem.DNA;
+import GeneticSystem.Dna;
 import Util.FileUtility;
 import Constants.Constants;
 import javafx.application.Application;
@@ -48,35 +48,38 @@ public class Main extends Application {
         new Thread(() -> {
             int neuronNumber = Integer.valueOf(neuronSize.getText());
 
-            GeneticParameter geneticParameter = new GeneticParameter();
-            geneticParameter.setCrossOverProbability(crossover.getText());
-            geneticParameter.setFitValueThreshold(accept.getText());
-            geneticParameter.setMutationProbability(mutation.getText());
-            geneticParameter.setPopulationSize(population.getText());
-            geneticParameter.setIterationCount(maxIteration.getText());
-
+            GeneticParameter geneticParameter = getGeneticParameter();
             GeneticSystem geneticSystem = new GeneticSystem(Constants.RBF_DEFAULT_DIMENSION, geneticParameter, new RBF(neuronNumber));
 
-            try {
-                geneticSystem.loadTrainingData(FileUtility.getLines(FileUtility.getFileName("data")));
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-            geneticSystem.run();
-            RBF rbf = new RBF(neuronNumber);
-            rbf.setParameter(
-                    geneticSystem.getSolutionDNA().getTheta(),
-                    geneticSystem.getSolutionDNA().getWeights(),
-                    geneticSystem.getSolutionDNA().getDistances(),
-                    geneticSystem.getSolutionDNA().getSigma()
-            );
-            System.out.println();
-            DNA solution = geneticSystem.getSolutionDNA();
+            loadTrainingData(geneticSystem);
 
-            String output = String.format("Fitness value: %.10f\n", solution.getFitnessVaule());
+            geneticSystem.run();
+
+            Dna solution = geneticSystem.getSolutionDNA();
+            String output = String.format("Fitness value: %.10f\n", solution.getFitnessValue());
             output += solution.toString();
             result.setText(output);
             start.setDisable(false);
         }).start();
+    }
+
+    private void loadTrainingData(GeneticSystem geneticSystem) {
+        try {
+            String[] files = FileUtility.getFilesName("data");
+            geneticSystem.loadTrainingData(FileUtility.getLines(files));
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private GeneticParameter getGeneticParameter() {
+        GeneticParameter geneticParameter = new GeneticParameter();
+        geneticParameter.setCrossOverProbability(crossover.getText());
+        geneticParameter.setFitValueThreshold(accept.getText());
+        geneticParameter.setMutationProbability(mutation.getText());
+        geneticParameter.setPopulationSize(population.getText());
+        geneticParameter.setIterationCount(maxIteration.getText());
+
+        return geneticParameter;
     }
 }

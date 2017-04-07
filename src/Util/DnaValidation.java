@@ -2,7 +2,7 @@ package Util;
 
 import Constants.Constants;
 
-public class DNAValidation {
+public class DnaValidation {
 
     public static boolean validate (double _weights[],double _distances[],double _sigma[],double _theta) {
         return validateDistances(_distances) && validateWeights(_weights) && validateSigma(_sigma) && validateTheta(_theta);
