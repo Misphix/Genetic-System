@@ -1,6 +1,5 @@
 package GeneticSystem;
 
-
 import Util.DnaValidation;
 import Constants.Constants;
 
@@ -28,32 +27,6 @@ public class Dna {
         return fitnessValue;
     }
 
-    public void setWeights(double weights[]) {
-        if (DnaValidation.validateWeights(weights)) {
-            this.weights = weights;
-        } else {
-            assert false;
-        }
-
-    }
-
-    public void setDistances(double distances[]) {
-        if (DnaValidation.validateDistances(distances)) {
-            this.distances = distances;
-        } else {
-            assert false;
-        }
-
-    }
-
-    public void setSigma(double sigma[]) {
-        if (DnaValidation.validateSigma(sigma)) {
-            this.sigma = sigma;
-        } else {
-            assert false;
-        }
-    }
-
     private void setTheta(double theta) {
         if (DnaValidation.validateTheta(theta)) {
             this.theta = theta;
@@ -63,27 +36,28 @@ public class Dna {
 
     }
 
-    public double[] getWeights() {
+    double[] getWeights() {
         return weights;
     }
 
-    public double[] getDistances() {
+    double[] getDistances() {
         return distances;
     }
 
-    public double[] getSigma() {
+    double[] getSigma() {
         return sigma;
     }
 
-    public double getTheta() {
+    double getTheta() {
         return theta;
     }
 
-
     void crossOver(Dna dna) {
         double sigma = Math.random();
+
         for (int k = 0; k < getDistances().length; k++) {
             double diffValue = getDistances()[k] - dna.getDistances()[k];
+
             if (DnaValidation.validateDistances(getDistances()[k] + (sigma * diffValue))) {
                 getDistances()[k] += sigma * diffValue;
             } else {
@@ -132,6 +106,7 @@ public class Dna {
 
         for (int k = 0; k < getSigma().length; k++) {
             double diffValue = getSigma()[k] - dna.getSigma()[k];
+
             if (DnaValidation.validateSigma(getSigma()[k] + (sigma * diffValue))) {
                 getSigma()[k] += sigma * diffValue;
             } else {
@@ -141,7 +116,6 @@ public class Dna {
                     getSigma()[k] = sigma * Constants.DNA_MIN_SIGMA;
                 }
             }
-
 
             if (DnaValidation.validateSigma(dna.getSigma()[k] - (sigma * diffValue))) {
                 dna.getSigma()[k] -= sigma * diffValue;
@@ -156,6 +130,7 @@ public class Dna {
         }
 
         double diffValue = getTheta() - dna.getTheta();
+
         if (DnaValidation.validateTheta(getTheta() + (sigma * Math.pow(diffValue, 2)))) {
             setTheta(getTheta() + sigma * Math.pow(diffValue, 2));
         } else {
@@ -175,11 +150,11 @@ public class Dna {
                 dna.setTheta(sigma * Constants.DNA_MAX_THETA);
             }
         }
-
     }
 
     void mutate() {
         double random = Math.random();
+
         for (int j = 0; j < getDistances().length; j++) {
             double value = Constants.DNA_MAX_DISTANCES - getDistances()[j];
             getDistances()[j] = getDistances()[j] + ((random > 0.5) ? -1 * (Math.random() * getDistances()[j]) : Math.random() * value);

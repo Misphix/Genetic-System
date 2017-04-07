@@ -44,14 +44,13 @@ public class GeneticSystem {
 
         solutionDNA = copyDNA(dnaList.get(0));
         int t = 0;
-        while (t < iterationCount) {
+        while (t++ < iterationCount) {
             reproduction();
             crossOver();
             mutate();
             if (solutionDNA.getFitnessValue() < fitValueThreshold) {
                 break;
             }
-            t++;
         }
     }
 
@@ -72,44 +71,40 @@ public class GeneticSystem {
                 distances[i * dimensions + j] = (Math.random() * 30);
             }
         }
+
         Dna dna = new Dna(weights, distances, sigma, theta);
         dna.setFitnessValue(calculateDiffError(dna));
+
         return dna;
     }
-
-    private Dna[] generateDNAs(int dimensions, int neuronNumber) {
-        Dna DNAs[] = new Dna[populationSize];
-        for (int i = 0; i < populationSize; i++) {
-            DNAs[i] = generateDNA(dimensions, neuronNumber);
-        }
-        return DNAs;
-    }
-
 
     private double calculateDiffError(Dna dna) {
         rbf.setParameter(dna.getTheta(), dna.getWeights(), dna.getDistances(), dna.getSigma());
         double error = 0;
-        for (int j = 0; j < trainingData.length; j++) {
-            String datas[] = trainingData[j].split(" ");
-            double input[] = {Double.valueOf(datas[0]), Double.valueOf(datas[1]), Double.valueOf(datas[2])};
-            error += Math.abs(Double.valueOf(datas[3]) - rbf.getOutput(input));
-        }
-        return error / trainingData.length;
 
+        for (String aTrainingData : trainingData) {
+            String data[] = aTrainingData.split(" ");
+            double input[] = {Double.valueOf(data[0]), Double.valueOf(data[1]), Double.valueOf(data[2])};
+            error += Math.abs(Double.valueOf(data[3]) - rbf.getOutput(input));
+        }
+
+        return error / trainingData.length;
     }
 
     private void reproduction() {
 
         ArrayList<Dna> poolsDNAs = new ArrayList<>();
         double totalValue = 0;
-        for (int d = 0; d < dnaList.size(); d++) {
-            dnaList.get(d).setFitnessValue(calculateDiffError(dnaList.get(d)));
-            if (dnaList.get(d).getFitnessValue() < solutionDNA.getFitnessValue()) {
-                solutionDNA = copyDNA(dnaList.get(d));
+
+        for (Dna dna : dnaList) {
+            dna.setFitnessValue(calculateDiffError(dna));
+            if (dna.getFitnessValue() < solutionDNA.getFitnessValue()) {
+                solutionDNA = copyDNA(dna);
             }
-            totalValue += dnaList.get(d).getFitnessValue();
+            totalValue += dna.getFitnessValue();
         }
-        dnaList.sort(DNAComparator);
+
+        dnaList.sort(DnaComparator);
         System.out.println(calculateDiffError(dnaList.get(0)));
         int greatDNACount = (int) ((double) populationSize * Constants.DNA_FIRST_PERCENT);
         int secondDNACount = (int) ((double) populationSize * Constants.DNA_SECOND_PERCENT);
@@ -138,11 +133,11 @@ public class GeneticSystem {
         while (poolsDNAs.size() < dnaList.size()) {
             Dna newDNA = generateDNA(dimensions, rbf.getNeuronCount());
             poolsDNAs.add(newDNA);
+
             if (newDNA.getFitnessValue() < solutionDNA.getFitnessValue()) {
                 solutionDNA = copyDNA(newDNA);
             }
         }
-
 
         dnaList.clear();
         dnaList = poolsDNAs;
@@ -151,8 +146,9 @@ public class GeneticSystem {
     }
 
     private void crossOver() {
-        int persevCount = (int) (populationSize * Constants.DNA_RESERVE_PERCENT);
-        for (int i = persevCount; i < populationSize / 2; i++) {
+        int reserveCount = (int) (populationSize * Constants.DNA_RESERVE_PERCENT);
+
+        for (int i = reserveCount; i < populationSize / 2; i++) {
             double probability = Math.random();
             if (probability < crossProbability) {
                 dnaList.get(i).crossOver(dnaList.get(populationSize / 2 + i));
@@ -161,8 +157,9 @@ public class GeneticSystem {
     }
 
     private void mutate() {
-        int persevCount = (int) (populationSize * Constants.DNA_RESERVE_PERCENT);
-        for (int i = persevCount; i < populationSize; i++) {
+        int reserveCount = (int) (populationSize * Constants.DNA_RESERVE_PERCENT);
+
+        for (int i = reserveCount; i < populationSize; i++) {
             double probability = Math.random();
             if (probability < mutProbability) {
                 if (dnaList.get(i).getFitnessValue() > solutionDNA.getFitnessValue()) {
@@ -173,16 +170,13 @@ public class GeneticSystem {
 
     }
 
-    private Comparator<Dna> DNAComparator = new Comparator<Dna>() {
-        @Override
-        public int compare(Dna o1, Dna o2) {
-            if (o1.getFitnessValue() > o2.getFitnessValue()) {
-                return 1;
-            } else if (o1.getFitnessValue() < o2.getFitnessValue()) {
-                return -1;
-            } else {
-                return 0;
-            }
+    private Comparator<Dna> DnaComparator = (Comparator<Dna>) (o1, o2) -> {
+        if (o1.getFitnessValue() > o2.getFitnessValue()) {
+            return 1;
+        } else if (o1.getFitnessValue() < o2.getFitnessValue()) {
+            return -1;
+        } else {
+            return 0;
         }
     };
 
@@ -194,12 +188,8 @@ public class GeneticSystem {
 
     private double[] copyValue(double copyValue[]) {
         double value[] = new double[copyValue.length];
-        for (int i = 0; i < copyValue.length; i++) {
-            value[i] = copyValue[i];
-        }
+        System.arraycopy(copyValue, 0, value, 0, copyValue.length);
         return value;
 
     }
-
-
 }

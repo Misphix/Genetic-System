@@ -28,22 +28,22 @@ public class GeneticParameter {
     }
 
     Double getMutationProbability() {
-        return this.mutationProbability;
+        return mutationProbability;
     }
 
     Double getCrossOverProbability() {
-        return this.crossOverProbability;
+        return crossOverProbability;
     }
 
     Double getFitValueThreshold() {
-        return this.fitValueThreshold;
+        return fitValueThreshold;
     }
 
     int getIterationCount() {
-        return this.iterationCount;
+        return iterationCount;
     }
 
     int getPopulationSize() {
-        return this.populationSize;
+        return populationSize;
     }
 }

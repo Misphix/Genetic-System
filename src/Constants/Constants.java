@@ -4,14 +4,7 @@ public class Constants {
 	// RBF
 	public static int RBF_DEFAULT_DIMENSION = 3;
 
-	// Genetic
-
-	public static String GENETIC_DEFAULT_CROSSOVER_PROBABILITY = "0.6";
-	public static String GENETIC_DEFAULT_MUTATION_PROBABILITY = "0.7";
-	public static String GENETIC_DEFAULT_POPULATION_COUNT = "500";
-	public static String GENETIC_DEFAULT_ITERATION_COUNT = "50";
-	//DNA
-
+	// DNA
 	public static int DNA_MAX_WEIGHT = 40;
 	public static int DNA_MIN_WEIGHT = -40;
 

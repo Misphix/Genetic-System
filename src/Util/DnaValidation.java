@@ -9,8 +9,8 @@ public class DnaValidation {
     }
 
     public static boolean validateDistances(double value[]) {
-        for(int i =0 ; i< value.length;i++) {
-            if(!validateDistances(value[i])) {
+        for (double aValue : value) {
+            if (!validateDistances(aValue)) {
                 return false;
             }
         }
@@ -18,8 +18,8 @@ public class DnaValidation {
     }
 
     public static boolean validateWeights(double value[]) {
-        for(int i =0 ; i< value.length;i++) {
-            if(!validateWeights(value[i])) {
+        for (double aValue : value) {
+            if (!validateWeights(aValue)) {
                 return false;
             }
         }
@@ -27,8 +27,8 @@ public class DnaValidation {
     }
 
     public static boolean validateSigma(double value[]) {
-        for(int i =0 ; i< value.length;i++) {
-            if(!validateSigma(value[i])) {
+        for (double aValue : value) {
+            if (!validateSigma(aValue)) {
                 return false;
             }
         }
@@ -36,34 +36,18 @@ public class DnaValidation {
     }
 
     public static boolean validateTheta(double value) {
-        if(!(value >= Constants.DNA_MIN_THETA && value <= Constants.DNA_MAX_THETA )) {
-            return false;
-        }
-        return true;
+        return value >= Constants.DNA_MIN_THETA && value <= Constants.DNA_MAX_THETA;
     }
 
     public static boolean validateDistances(double value) {
-        if(!(value >= Constants.DNA_MIN_DISTANCES && value <= Constants.DNA_MAX_DISTANCES)) {
-            return false;
-        }
-        return true;
+        return value >= Constants.DNA_MIN_DISTANCES && value <= Constants.DNA_MAX_DISTANCES;
     }
 
     public static boolean validateWeights(double value) {
-        if(!(value >= Constants.DNA_MIN_WEIGHT && value <= Constants.DNA_MAX_WEIGHT)) {
-            return false;
-        }
-
-        return true;
+        return value >= Constants.DNA_MIN_WEIGHT && value <= Constants.DNA_MAX_WEIGHT;
     }
 
     public static boolean validateSigma(double value) {
-        if(!(value >= Constants.DNA_MIN_SIGMA && value <= Constants.DNA_MAX_SIGMA)) {
-            return false;
-        }
-
-        return true;
+        return value >= Constants.DNA_MIN_SIGMA && value <= Constants.DNA_MAX_SIGMA;
     }
-
-
 }
