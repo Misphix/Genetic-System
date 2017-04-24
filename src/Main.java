@@ -1,7 +1,7 @@
-import GeneticSystem.GeneticParameter;
+import ParticleSystem.ParticleParameter;
+import ParticleSystem.ParticleSystem;
+import ParticleSystem.Dna;
 import RBF.RBF;
-import GeneticSystem.GeneticSystem;
-import GeneticSystem.Dna;
 import Util.FileUtility;
 import Constants.Constants;
 import javafx.application.Application;
@@ -48,14 +48,14 @@ public class Main extends Application {
         new Thread(() -> {
             int neuronNumber = Integer.valueOf(neuronSize.getText());
 
-            GeneticParameter geneticParameter = getGeneticParameter();
-            GeneticSystem geneticSystem = new GeneticSystem(Constants.RBF_DEFAULT_DIMENSION, geneticParameter, new RBF(neuronNumber));
+            ParticleParameter particleParameter = getParticleParameter();
+            ParticleSystem particleSystem = new ParticleSystem(Constants.RBF_DEFAULT_DIMENSION, particleParameter, new RBF(neuronNumber));
 
-            loadTrainingData(geneticSystem);
+            loadTrainingData(particleSystem);
 
-            geneticSystem.run();
+            particleSystem.run();
 
-            Dna solution = geneticSystem.getSolutionDNA();
+            Dna solution = particleSystem.getBestDna();
             String output = String.format("Fitness value: %.10f\n", solution.getFitnessValue());
             output += solution.toString();
             result.setText(output);
@@ -63,23 +63,21 @@ public class Main extends Application {
         }).start();
     }
 
-    private void loadTrainingData(GeneticSystem geneticSystem) {
+    private void loadTrainingData(ParticleSystem particleSystem) {
         try {
             String[] files = FileUtility.getFilesName("data");
-            geneticSystem.loadTrainingData(FileUtility.getLines(files));
+            particleSystem.loadTrainingData(FileUtility.getLines(files));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
 
-    private GeneticParameter getGeneticParameter() {
-        GeneticParameter geneticParameter = new GeneticParameter();
-        geneticParameter.setCrossOverProbability(crossover.getText());
-        geneticParameter.setFitValueThreshold(accept.getText());
-        geneticParameter.setMutationProbability(mutation.getText());
-        geneticParameter.setPopulationSize(population.getText());
-        geneticParameter.setIterationCount(maxIteration.getText());
+    private ParticleParameter getParticleParameter() {
+        ParticleParameter particleParameter = new ParticleParameter();
+        particleParameter.setFitValueThreshold(accept.getText());
+        particleParameter.setPopulationSize(population.getText());
+        particleParameter.setIterationCount(maxIteration.getText());
 
-        return geneticParameter;
+        return particleParameter;
     }
 }
