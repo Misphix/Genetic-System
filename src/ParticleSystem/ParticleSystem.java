@@ -46,7 +46,18 @@ public class ParticleSystem {
         int t = 0;
         while (t++ < iterationCount) {
             dnaList.sort(DnaComparator);
-            bestDna = copyDNA(dnaList.get(0));
+            bestDna = dnaList.get(0).clone();
+            System.out.println(bestDna.getFitnessValue());
+
+            for (Dna dna : dnaList ) {
+                dna.move(bestDna);
+                dna.setFitnessValue(calculateDiffError(dna));
+                dna.updateLocalBest();
+            }
+
+            if (bestDna.getFitnessValue() < fitValueThreshold) {
+                break;
+            }
         }
     }
 
@@ -85,17 +96,5 @@ public class ParticleSystem {
         }
 
         return error / trainingData.length;
-    }
-
-    private Dna copyDNA(Dna copyDna) {
-        Dna dna = new Dna(copyValue(copyDna.getWeights()), copyValue(copyDna.getDistances()), copyValue(copyDna.getSigma()), copyDna.getTheta());
-        dna.setFitnessValue(copyDna.getFitnessValue());
-        return dna;
-    }
-
-    private double[] copyValue(double copyValue[]) {
-        double value[] = new double[copyValue.length];
-        System.arraycopy(copyValue, 0, value, 0, copyValue.length);
-        return value;
     }
 }
