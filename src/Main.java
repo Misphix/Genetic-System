@@ -53,13 +53,17 @@ public class Main extends Application {
 
             loadTrainingData(particleSystem);
 
-            particleSystem.run();
+            String output = "Oops! There are some error. Please try again";
+            try {
+                particleSystem.run();
 
-            Dna solution = particleSystem.getBestDna();
-            String output = String.format("Fitness value: %.10f\n", solution.getFitnessValue());
-            output += solution.toString();
-            result.setText(output);
-            start.setDisable(false);
+                Dna solution = particleSystem.getBestDna();
+                output = String.format("Fitness value: %.10f\n", solution.getFitnessValue());
+                output += solution.toString();
+            } finally {
+                result.setText(output);
+                start.setDisable(false);
+            }
         }).start();
     }
 
