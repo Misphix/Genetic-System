@@ -1,5 +1,6 @@
 package ParticleSystem;
 
+import Constants.Constants;
 import Util.DnaValidation;
 
 import java.util.ArrayList;
@@ -39,17 +40,29 @@ public class Dna {
 
         for (int i = 0; i < wl; i++) {
             weights[i] += speed[i];
+            if (!DnaValidation.validateWeights(weights[i])) {
+                weights[i] = weights[i] > Constants.DNA_MAX_WEIGHT ? Constants.DNA_MAX_WEIGHT : Constants.DNA_MIN_WEIGHT;
+            }
         }
 
         for (int i = 0; i < dl; i++) {
             distances[i] += speed[i + wl];
+            if (!DnaValidation.validateDistances(distances[i])) {
+                distances[i] = distances[i] > Constants.DNA_MAX_DISTANCES ? Constants.DNA_MAX_DISTANCES : Constants.DNA_MIN_DISTANCES;
+            }
         }
 
         for (int i = 0; i < sl; i++) {
             sigma[i] += speed[i + wl + dl];
+            if (!DnaValidation.validateSigma(sigma[i])) {
+                sigma[i] = sigma[i] > Constants.DNA_MAX_SIGMA ? Constants.DNA_MAX_SIGMA : Constants.DNA_MIN_SIGMA;
+            }
         }
 
         theta += speed[wl + dl + sl];
+        if (!DnaValidation.validateTheta(theta)) {
+            theta = theta > Constants.DNA_MAX_THETA ? Constants.DNA_MAX_THETA : Constants.DNA_MIN_THETA;
+        }
     }
 
     private void newSpeed(Dna globalBest) {

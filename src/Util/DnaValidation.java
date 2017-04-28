@@ -8,7 +8,7 @@ public class DnaValidation {
         return validateDistances(_distances) && validateWeights(_weights) && validateSigma(_sigma) && validateTheta(_theta);
     }
 
-    public static boolean validateDistances(double value[]) {
+    private static boolean validateDistances(double value[]) {
         for (double aValue : value) {
             if (!validateDistances(aValue)) {
                 return false;
@@ -17,7 +17,7 @@ public class DnaValidation {
         return true;
     }
 
-    public static boolean validateWeights(double value[]) {
+    private static boolean validateWeights(double value[]) {
         for (double aValue : value) {
             if (!validateWeights(aValue)) {
                 return false;
@@ -26,7 +26,7 @@ public class DnaValidation {
         return true;
     }
 
-    public static boolean validateSigma(double value[]) {
+    private static boolean validateSigma(double value[]) {
         for (double aValue : value) {
             if (!validateSigma(aValue)) {
                 return false;
